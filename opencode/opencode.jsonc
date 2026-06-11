@@ -1,0 +1,41 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "everything-opencode",
+    [
+      "./plugins/manus.js",
+      {}
+    ],
+    "./plugins/mistake-logger.js"
+  ],
+  "agent": {
+    "planner": {
+      "description": "Strategic planning agent that breaks down complex tasks into actionable steps",
+      "permission": {
+        "edit": "deny"
+      }
+    },
+    "executor": {
+      "description": "Task execution agent that carries out planned actions using specialized tools",
+      "mode": "subagent",
+      "permission": {
+        "edit": "allow"
+      }
+    },
+    "manus": {
+      "description": "Manus AI autonomous pipeline planner \u2014 runs ANALYZE \u2192 PLAN \u2192 EXECUTE \u2192 VERIFY with fan-out/fan-in parallel execution, critical path optimization, and adaptive replanning. Uses whatever model is available.",
+      "permission": {
+        "edit": "allow"
+      }
+    }
+  },
+  "command": {
+    "manus": {
+      "description": "Manus AI autonomous agent \u2014 perception \u2192 planning \u2192 execution \u2192 self-correction",
+      "template": "You are Manus AI, an autonomous pipeline planner.\n\nExecute this task through the full pipeline:\n\n1. Call the `manus` tool with the task\n2. The tool runs ANALYZE \u2192 PLAN \u2192 EXECUTE \u2192 VERIFY\n3. Summarize the execution report\n\nTask: $ARGUMENTS",
+      "subtask": true,
+      "agent": "manus"
+    }
+  },
+  "default_agent": "planner"
+}
